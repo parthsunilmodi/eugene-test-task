@@ -14,6 +14,7 @@ const AllPokemon = () => {
   const allPokemonList = useSelector(getAllPokemonDataSelector);
   const loading = useSelector(getLoading);
 
+  const [list, setList] = useState([]);
   const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
@@ -21,12 +22,9 @@ const AllPokemon = () => {
     dispatch(getPokemonData(0, 20));
   }, []);
 
-  const displayRecord: any = useMemo(() => {
-    if(searchName === '') return allPokemonList?.results;
-    if(searchName?.length) {
-     return (allPokemonList?.results || [])?.filter((d: any) => (d?.name).toLowerCase().includes(searchName.toLowerCase())) || [];
-    }
-  }, [searchName]);
+  useEffect(() => {
+    setList(allPokemonList?.results);
+  }, [allPokemonList]);
 
   const onAddPokemon = (record) => () => {
     const username = localStorage.getItem('user') || '';
@@ -38,8 +36,14 @@ const AllPokemon = () => {
   };
 
   const onSearch = (e) => {
-    const { value } = e.target;
-    setSearchName(value);
+    const text = e.target.value;
+    setSearchName(text);
+    if (text) {
+      const result = (allPokemonList?.results || [])?.filter((d: any) => (d?.name).toLowerCase().includes(text.toLowerCase())) || [];
+      setList(result);
+    } else {
+      setList(allPokemonList?.results);
+    }
   };
 
   const getPageRecords = (page, pageSize) => {
@@ -79,10 +83,10 @@ const AllPokemon = () => {
         <Input prefix={<SearchOutlined />} onChange={onSearch} placeholder="Search by Name.." />
       </div>
       <Table
-        dataSource={displayRecord}
+        dataSource={list}
         columns={column}
         getPaginationRecord={getPageRecords}
-        total={searchName?.length ? displayRecord.length : allPokemonList?.count}
+        total={searchName?.length ? list.length : allPokemonList?.count}
       />
     </Container>
   );
