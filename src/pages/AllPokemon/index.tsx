@@ -18,7 +18,7 @@ const AllPokemon = () => {
 
   useEffect(() => {
     // @ts-ignore
-    dispatch(getPokemonData(0, 20));
+    dispatch(getPokemonData(0, 10000));
   }, []);
 
   const displayRecord: any = useMemo(() => {
@@ -40,11 +40,6 @@ const AllPokemon = () => {
   const onSearch = (e) => {
     const { value } = e.target;
     setSearchName(value);
-  };
-
-  const getPageRecords = (page, pageSize) => {
-    // @ts-ignore
-    dispatch(getPokemonData(((page -1) * pageSize), pageSize));
   };
 
   const column = [
@@ -81,7 +76,6 @@ const AllPokemon = () => {
       <Table
         dataSource={displayRecord}
         columns={column}
-        getPaginationRecord={getPageRecords}
         total={searchName?.length ? displayRecord.length : allPokemonList?.count}
       />
     </Container>
