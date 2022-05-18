@@ -8,7 +8,7 @@ import { RouteWrapper } from './styles';
 const PrivateRoute = ({ children }) => {
   const loading = useSelector(getLoading);
 
-  const user = localStorage.getItem("user") || "";
+  const user = localStorage.getItem('user') || '';
 
   if(!user) {
     return <Navigate to='/' />

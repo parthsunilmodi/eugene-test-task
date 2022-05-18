@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, message, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
@@ -20,19 +20,20 @@ const AllPokemon = () => {
   useEffect(() => {
     // @ts-ignore
     dispatch(getPokemonData(0, 20));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setList(allPokemonList?.results);
   }, [allPokemonList]);
 
-  const onAddPokemon = (record) => () => {
+  const onAddPokemon = (record) => async () => {
     const username = localStorage.getItem('user') || '';
     // @ts-ignore
-    const res = dispatch(addPokemon({...record, username }));
-    if(res) {
-      message.success('Pokemon added successfully in your bag..!');
-    }
+    dispatch(addPokemon({ ...record, username }, (res: boolean) => {
+      if(res) {
+        message.success('Pokemon added successfully in your bag..!');
+      }
+    }));
   };
 
   const onSearch = (e) => {

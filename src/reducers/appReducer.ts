@@ -37,7 +37,7 @@ export const appReducer = handleActions<State, Action<any>>(
         ...state,
         myPokemonData: [
           ...state.myPokemonData.slice(0, index),
-          ...state.myPokemonData.slice(index+1)
+          ...state.myPokemonData.slice(index + 1)
       ]
       }
     },

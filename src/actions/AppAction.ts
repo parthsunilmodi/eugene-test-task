@@ -23,14 +23,14 @@ export const getPokemonData = (offset: number, limit: number) => async (dispatch
   }
 };
 
-export const addPokemon = (pokemon: any) => async (dispatch: any) => {
+export const addPokemon = (pokemon: any, cb: (res: boolean) => void) => async (dispatch: any) => {
   try {
     dispatch({ type: Type.SET_LOADING, payload: true });
     await dispatch({ type: Type.MY_POKEMON_DATA, payload: pokemon || {} });
-    return true;
+    cb(true);
   } catch (err) {
     console.error(err);
-    return false;
+    cb(false);
   } finally {
     dispatch({ type: Type.SET_LOADING, payload: false });
   }
