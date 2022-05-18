@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, message, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import Table from 'components/AntTable';
+import { Table, SpinLoader } from 'components';
 import { addPokemon, getPokemonData } from 'actions/AppAction';
 import { getAllPokemonDataSelector, getLoading } from 'seletors/AppSelector';
-import SpinLoader from 'components/SpinLoader';
 import { Container } from './styles';
 
 message.config({ maxCount: 1 });
@@ -15,7 +14,6 @@ const AllPokemon = () => {
   const allPokemonList = useSelector(getAllPokemonDataSelector);
   const loading = useSelector(getLoading);
 
-  const [list, setList] = useState([]);
   const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
@@ -23,29 +21,25 @@ const AllPokemon = () => {
     dispatch(getPokemonData(0, 20));
   }, []);
 
-  useEffect(() => {
-    setList(allPokemonList?.results);
-  }, [allPokemonList]);
+  const displayRecord: any = useMemo(() => {
+    if(searchName === '') return allPokemonList?.results;
+    if(searchName?.length) {
+     return (allPokemonList?.results || [])?.filter((d: any) => (d?.name).toLowerCase().includes(searchName.toLowerCase())) || [];
+    }
+  }, [searchName]);
 
   const onAddPokemon = (record) => () => {
-    const username = localStorage.getItem("user") || "";
+    const username = localStorage.getItem('user') || '';
     // @ts-ignore
-    dispatch(addPokemon({...record, username }, (res) => {
-      if(res) {
-        message.success("Pokemon added successfully in your bag..!");
-      }
-    }));
+    const res = dispatch(addPokemon({...record, username }));
+    if(res) {
+      message.success('Pokemon added successfully in your bag..!');
+    }
   };
 
   const onSearch = (e) => {
-    const text = e.target.value;
-    setSearchName(text);
-    if (text) {
-      const result = (allPokemonList?.results || [])?.filter((d: any) => (d?.name).toLowerCase().includes(text.toLowerCase())) || [];
-      setList(result);
-    } else {
-      setList(allPokemonList?.results);
-    }
+    const { value } = e.target;
+    setSearchName(value);
   };
 
   const getPageRecords = (page, pageSize) => {
@@ -85,10 +79,10 @@ const AllPokemon = () => {
         <Input prefix={<SearchOutlined />} onChange={onSearch} placeholder="Search by Name.." />
       </div>
       <Table
-        dataSource={list}
+        dataSource={displayRecord}
         columns={column}
         getPaginationRecord={getPageRecords}
-        total={searchName?.length ? list.length : allPokemonList?.count}
+        total={searchName?.length ? displayRecord.length : allPokemonList?.count}
       />
     </Container>
   );

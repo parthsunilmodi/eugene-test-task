@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { HomeOutlined } from '@ant-design/icons';
-import { Button } from "antd";
+import { Button } from 'antd';
 import { Container } from './styles';
 
 const Header = () => {

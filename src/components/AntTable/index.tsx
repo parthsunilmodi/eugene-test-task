@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { AntTable } from './styles';
 
 interface TableInterface {
@@ -22,6 +22,19 @@ const Table: React.FC<TableInterface> = (props) => {
     getPaginationRecord && getPaginationRecord(page, pageSize);
   };
 
+  const commonProps = {
+    total,
+    pageSize,
+    showSizeChanger: false,
+  }
+
+  const paginationProps = getPaginationRecord ?
+    {
+      ...commonProps,
+      current,
+      onChange: getRecords
+    } : { ...commonProps };
+
   return(
     <div>
       <AntTable
@@ -31,11 +44,7 @@ const Table: React.FC<TableInterface> = (props) => {
         dataSource={dataSource}
         columns={columns}
         pagination={{
-          total,
-          pageSize,
-          current,
-          showSizeChanger: false,
-          onChange: getPaginationRecord ? getRecords : null
+          ...paginationProps
         }}
       />
     </div>

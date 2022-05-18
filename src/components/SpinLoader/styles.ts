@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Spin } from 'antd';
 
-// eslint-disable-next-line import/prefer-default-export
 export const LoadingWrapper = styled.div`
   height: 100vh;
   width: 100vw;

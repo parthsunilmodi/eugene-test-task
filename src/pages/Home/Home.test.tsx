@@ -1,13 +1,7 @@
 import React from 'react';
 import Home from './index';
-import { render, fireEvent, screen } from 'test-utils';
+import { render, fireEvent } from 'test-utils';
 import '@testing-library/jest-dom';
-
-
-// test('renders home page', () => {
-//   render(<Home />);
-//   screen.debug();
-// });
 
 test('renders with input', () => {
   const { getByTestId } = render(<Home />)

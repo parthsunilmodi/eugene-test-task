@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import SpinLoader from "../components/SpinLoader";
+import { SpinLoader } from 'components';
 import { getLoading } from 'seletors/AppSelector';
 import { RouteWrapper } from './styles';
 

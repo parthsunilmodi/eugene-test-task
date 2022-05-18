@@ -1,6 +1,6 @@
-import { handleActions, Action } from "redux-actions";
+import { handleActions, Action } from 'redux-actions';
 
-import * as AppActions from "actions/AppAction";
+import * as AppActions from 'actions/AppAction';
 
 export type State = {
   readonly myPokemonData: any;
@@ -17,7 +17,7 @@ const initialState: State = {
   loading: false,
 };
 
-export const appReducer = handleActions<State, any>(
+export const appReducer = handleActions<State, Action<any>>(
   {
     [AppActions.Type.ALL_POKEMON_DATA]: (state: State, action: Action<any>) => {
       return {

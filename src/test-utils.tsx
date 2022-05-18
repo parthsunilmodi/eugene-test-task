@@ -1,11 +1,11 @@
 import React, { FC, ReactElement } from 'react'
 import { render, RenderOptions } from '@testing-library/react'
-import { PersistGate } from "redux-persist/integration/react";
-import { configureStore, history } from "./reducers/store";
-import { BrowserRouter as Router } from "react-router-dom";
+import { PersistGate } from 'redux-persist/integration/react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
-import { Provider } from "react-redux";
-import { persistStore } from "redux-persist";
+import { Provider } from 'react-redux';
+import { persistStore } from 'redux-persist';
+import { configureStore, history } from './reducers/store';
 
 const store = configureStore();
 const persistor = persistStore(store);
@@ -30,5 +30,5 @@ const customRender = (
   options?: Omit<RenderOptions, 'wrapper'>,
 ) => render(ui, {wrapper: AllTheProviders, ...options})
 
-export * from '@testing-library/react'
-export { customRender as render  }
+export * from '@testing-library/react';
+export { customRender as render  };

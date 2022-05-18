@@ -1,6 +1,6 @@
 import React, { Suspense, FC } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import SpinLoader from 'components/SpinLoader';
+import { SpinLoader } from 'components';
 import Header from './components/Header';
 import PrivateRoute from './Route/privateRoute';
 import './App.css';

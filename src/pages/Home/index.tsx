@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { Input, Button } from 'antd';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import SpinLoader from 'components/SpinLoader';
+import { SpinLoader } from 'components';
 import { getLoading, getMyPokemonSelector } from 'seletors/AppSelector';
 import { Container } from './styles';
 
 const Home = () => {
   const navigate = useNavigate();
-  const loading = useSelector(getLoading);
 
   const [userName, setUser] = useState('');
 
+  const loading = useSelector(getLoading);
   const myPokemon = useSelector(getMyPokemonSelector(userName));
 
   const onInputChange = (e) => {
@@ -20,7 +20,7 @@ const Home = () => {
   };
 
   const onSubmitName = () => {
-    localStorage.setItem("user", userName);
+    localStorage.setItem('user', userName);
     if(myPokemon?.length) {
       navigate('/bag');
     } else {

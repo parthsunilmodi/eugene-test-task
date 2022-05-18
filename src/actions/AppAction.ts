@@ -1,11 +1,11 @@
-import axiosI from "./index";
+import axiosI from './index';
 
 export const Type = {
-  ALL_POKEMON_DATA: "ALL_POKEMON_DATA",
-  MY_POKEMON_DATA: "MY_POKEMON_DATA",
-  DELETE_POKEMON_DATA: "DELETE_POKEMON_DATA",
-  SET_POKEMON_TYPE: "SET_POKEMON_TYPE",
-  SET_LOADING: "SET_LOADING"
+  ALL_POKEMON_DATA: 'ALL_POKEMON_DATA',
+  MY_POKEMON_DATA: 'MY_POKEMON_DATA',
+  DELETE_POKEMON_DATA: 'DELETE_POKEMON_DATA',
+  SET_POKEMON_TYPE: 'SET_POKEMON_TYPE',
+  SET_LOADING: 'SET_LOADING'
 };
 
 export const getPokemonData = (offset: number, limit: number) => async (dispatch: any) => {
@@ -23,29 +23,26 @@ export const getPokemonData = (offset: number, limit: number) => async (dispatch
   }
 };
 
-export const addPokemon = (pokemon: any, cb: (data: any) => {}) => async (dispatch: any) => {
+export const addPokemon = (pokemon: any) => async (dispatch: any) => {
   try {
     dispatch({ type: Type.SET_LOADING, payload: true });
     await dispatch({ type: Type.MY_POKEMON_DATA, payload: pokemon || {} });
-    cb(true);
-    return ;
+    return true;
   } catch (err) {
     console.error(err);
-    cb(false);
+    return false;
   } finally {
     dispatch({ type: Type.SET_LOADING, payload: false });
   }
 };
 
-export const deletePokemon = (pokemon: any, cb: (data: any) => void) => async (dispatch: any) => {
+export const deletePokemon = (pokemon: any) => async (dispatch: any) => {
   try {
     dispatch({ type: Type.SET_LOADING, payload: true });
     await dispatch({ type: Type.DELETE_POKEMON_DATA, payload: pokemon || {} });
-    cb(true);
-    return ;
+    return true;
   } catch (err) {
     console.error(err);
-    cb(false);
   } finally {
     dispatch({ type: Type.SET_LOADING, payload: false });
   }
