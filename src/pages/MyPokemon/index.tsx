@@ -28,7 +28,7 @@ const MyPokemon = () => {
       // @ts-ignore
       dispatch(getPokemonTypes());
     }
-  }, []);
+  }, [dispatch, pokemonTypeList]);
 
   const onDeleteRecord = (record) => async () => {
     // @ts-ignore
@@ -37,7 +37,7 @@ const MyPokemon = () => {
       const index = (list || []).findIndex(i => i.name === record.name && i.url === record.url);
       setList([
         ...list.slice(0, index),
-        ...list.slice(index+1)
+        ...list.slice(index + 1)
       ]);
       message.success("Pokemon removed from your bag successfully..!");
     }
@@ -99,7 +99,7 @@ const MyPokemon = () => {
           const pokemonArr = (i?.pokemon || []).map(p => p.pokemon);
           typeArr = [...typeArr, ...pokemonArr]
         });
-        const filterResult = (typeArr || []).filter(o => list.some(({name}) => o.name === name));
+        const filterResult = (typeArr || []).filter(o => myPokemon.some(({name}) => o.name === name));
         setTypeListResult(filterResult);
         return filterResult;
       }

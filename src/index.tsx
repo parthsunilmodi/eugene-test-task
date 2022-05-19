@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux'
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ConnectedRouter } from 'react-router-redux';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 import { configureStore, history } from './reducers/store';
 import 'antd/dist/antd.css';
 import './index.css';
