@@ -4,14 +4,16 @@ import { Button, message, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Table, SpinLoader } from 'components';
 import { addPokemon, getPokemonData } from 'actions/AppAction';
-import { getAllPokemonDataSelector, getLoading } from 'seletors/AppSelector';
+import {getAllPokemonDataSelector, getLoading, getMyPokemonSelector} from 'seletors/AppSelector';
 import { Container } from './styles';
 
 message.config({ maxCount: 1 });
 
 const AllPokemon = () => {
   const dispatch = useDispatch();
+  const username = localStorage.getItem('user') || '';
   const allPokemonList = useSelector(getAllPokemonDataSelector);
+  const myPokemonList = useSelector(getMyPokemonSelector(username));
   const loading = useSelector(getLoading);
 
   const [list, setList] = useState([]);
@@ -27,7 +29,11 @@ const AllPokemon = () => {
   }, [allPokemonList]);
 
   const onAddPokemon = (record) => async () => {
-    const username = localStorage.getItem('user') || '';
+    const index = (myPokemonList || []).findIndex(i => i.name === record.name && i.url === record.url);
+    if(index !== -1) {
+      message.warn('This pokemon is already in your bag');
+      return;
+    }
     // @ts-ignore
     dispatch(addPokemon({ ...record, username }, (res: boolean) => {
       if(res) {
