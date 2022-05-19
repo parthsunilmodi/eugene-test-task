@@ -20,7 +20,7 @@ const AllPokemon = () => {
   useEffect(() => {
     // @ts-ignore
     dispatch(getPokemonData(0, 10000));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setList(allPokemonList?.results);
@@ -45,11 +45,6 @@ const AllPokemon = () => {
     } else {
       setList(allPokemonList?.results);
     }
-  };
-
-  const getPageRecords = (page, pageSize) => {
-    // @ts-ignore
-    dispatch(getPokemonData(((page -1) * pageSize), pageSize));
   };
 
   const column = [
