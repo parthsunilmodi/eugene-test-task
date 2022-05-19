@@ -4,7 +4,7 @@ import { Button, message, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Table, SpinLoader } from 'components';
 import { addPokemon, getPokemonData } from 'actions/AppAction';
-import {getAllPokemonDataSelector, getLoading, getMyPokemonSelector} from 'seletors/AppSelector';
+import { getAllPokemonDataSelector, getLoading, getMyPokemonSelector } from 'seletors/AppSelector';
 import { Container } from './styles';
 
 message.config({ maxCount: 1 });
