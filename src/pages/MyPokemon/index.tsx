@@ -28,7 +28,7 @@ const MyPokemon = () => {
       // @ts-ignore
       dispatch(getPokemonTypes());
     }
-  }, [dispatch]);
+  }, [dispatch, pokemonTypeList]);
 
   const onDeleteRecord = (record) => async () => {
     // @ts-ignore
@@ -99,7 +99,7 @@ const MyPokemon = () => {
           const pokemonArr = (i?.pokemon || []).map(p => p.pokemon);
           typeArr = [...typeArr, ...pokemonArr]
         });
-        const filterResult = (typeArr || []).filter(o => list.some(({name}) => o.name === name));
+        const filterResult = (typeArr || []).filter(o => myPokemon.some(({name}) => o.name === name));
         setTypeListResult(filterResult);
         return filterResult;
       }
