@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider } from 'react-redux'
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 import { ConnectedRouter } from 'react-router-redux';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -10,15 +12,18 @@ import 'antd/dist/antd.css';
 import './index.css';
 
 const store = configureStore();
+const persistor = persistStore(store);
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ConnectedRouter history={history} store={store}>
-        <Router>
-          <App />
-        </Router>
-      </ConnectedRouter>
+      <PersistGate persistor={persistor} loading={null}>
+        <ConnectedRouter history={history} store={store}>
+          <Router>
+            <App />
+          </Router>
+        </ConnectedRouter>
+      </PersistGate>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'),
