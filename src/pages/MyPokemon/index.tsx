@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Input, message, Select } from 'antd';
-import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
-import { Table, SpinLoader } from 'components';
+import { message, Select } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Table, SpinLoader, SearchInput } from 'components';
 import { getLoading, getMyPokemonSelector, getPokemonTypeSelector } from 'seletors/AppSelector';
 import { getPokemonTypeData, getPokemonTypes, deletePokemon } from 'actions/AppAction';
 import { Container, DeleteIcon, FilterWrap } from './styles';
@@ -125,7 +125,7 @@ const MyPokemon = () => {
     <Container>
       { loading && <SpinLoader /> }
       <FilterWrap>
-        <Input prefix={<SearchOutlined />} onChange={onSearch} placeholder="Search by Name.." />
+        <SearchInput onSearch={onSearch} />
         <Select
           mode="multiple"
           placeholder="Please select type of pokemon"

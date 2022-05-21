@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, message, Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { Table, SpinLoader } from 'components';
+import { Button, message } from 'antd';
+import { Table, SpinLoader, SearchInput } from 'components';
 import { addPokemon, getPokemonData } from 'actions/AppAction';
 import { getAllPokemonDataSelector, getLoading, getMyPokemonSelector } from 'seletors/AppSelector';
 import { Container } from './styles';
@@ -86,9 +85,7 @@ const AllPokemon = () => {
   return(
     <Container>
       { loading && <SpinLoader /> }
-      <div>
-        <Input prefix={<SearchOutlined />} onChange={onSearch} placeholder="Search by Name.." />
-      </div>
+      <SearchInput onSearch={onSearch} />
       <Table
         dataSource={list}
         columns={column}
