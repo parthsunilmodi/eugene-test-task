@@ -8,8 +8,11 @@ import configureStore, { history } from './reducers/store';
 
 const { persistor, store } = configureStore();
 
-// @ts-ignore
-const AllTheProviders: FC = ({children}) => {
+interface AllProviderInterface {
+  children: JSX.Element
+}
+
+const AllTheProviders: FC<AllProviderInterface> = ({ children }) => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
