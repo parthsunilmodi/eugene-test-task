@@ -3,7 +3,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 
 interface SearchInputInterface {
-  onSearch: (e: ChangeEvent) => void;
+  onSearch: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 const SearchInput: React.FC<SearchInputInterface> = (props) => {
   const { onSearch } = props;

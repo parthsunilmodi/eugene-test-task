@@ -1,17 +1,8 @@
+import { History } from 'history';
 import { combineReducers } from 'redux';
-import { routerReducer as router, RouterState } from 'react-router-redux';
+import * as appReducer from './appReducer';
 
-import {
-  appReducer,
-  State as AppState
-} from './appReducer';
-
-
-export interface RootState {
-  router: RouterState;
-  appReducer: AppState,
-}
-export const rootReducer = combineReducers<RootState>({
-  router,
-  appReducer: appReducer as any,
-});
+export default (history: History) =>
+  combineReducers({
+    ...appReducer,
+  });

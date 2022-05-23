@@ -25,4 +25,7 @@ export const AntTable = styled(Table)`
   .ant-pagination {
     margin: 16px 80px;
   }
+  .ant-table-expanded-row-fixed {
+    width: auto !important;
+  }
 `;

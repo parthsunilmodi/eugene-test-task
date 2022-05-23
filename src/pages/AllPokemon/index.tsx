@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState, ChangeEvent } from 'react';
+import { useSelector } from 'react-redux';
 import { Button, message } from 'antd';
 import { Table, SpinLoader, SearchInput } from 'components';
-import { addPokemon, getPokemonData } from 'actions/AppAction';
+import { Pokemon } from 'model';
 import { getAllPokemonDataSelector, getLoading, getMyPokemonSelector } from 'seletors/AppSelector';
+import { useActions } from 'actions';
+import * as AppActions from 'actions/AppAction';
 import { Container } from './styles';
 
 message.config({ maxCount: 1 });
 
 const AllPokemon = () => {
-  const dispatch = useDispatch();
   const username = localStorage.getItem('user') || '';
   const allPokemonList = useSelector(getAllPokemonDataSelector);
   const myPokemonList = useSelector(getMyPokemonSelector(username));
   const loading = useSelector(getLoading);
+  const appAction = useActions(AppActions);
 
   const [list, setList] = useState([]);
   const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
-    // @ts-ignore
-    dispatch(getPokemonData(0, 20));
-  }, [dispatch]);
+    appAction.getPokemonData(0, 20);
+  }, []);
 
   useEffect(() => {
     setList(allPokemonList?.results);
@@ -33,28 +34,26 @@ const AllPokemon = () => {
       message.warn('This pokemon is already in your bag');
       return;
     }
-    // @ts-ignore
-    dispatch(addPokemon({ ...record, username }, (res: boolean) => {
+    appAction.addPokemon({ ...record, username }, (res: boolean) => {
       if(res) {
         message.success('Pokemon added successfully in your bag..!');
       }
-    }));
+    });
   };
 
-  const onSearch = (e) => {
-    const text = e.target.value;
-    setSearchName(text);
-    if (text) {
-      const result = (allPokemonList?.results || [])?.filter((d: any) => (d?.name).toLowerCase().includes(text.toLowerCase())) || [];
+  const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setSearchName(value);
+    if (value) {
+      const result = (allPokemonList?.results || [])?.filter((d: Pokemon) => (d?.name).toLowerCase().includes(value.toLowerCase())) || [];
       setList(result);
     } else {
       setList(allPokemonList?.results);
     }
   };
 
-  const getPageRecords = (page, pageSize) => {
-    // @ts-ignore
-    dispatch(getPokemonData(((page -1) * pageSize), pageSize));
+  const getPageRecords = (page: number, pageSize: number) => {
+    appAction.getPokemonData(((page - 1) * pageSize), pageSize);
   };
 
   const column = [

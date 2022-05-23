@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { AntTable } from './styles';
+import { Pokemon } from 'model';
 
 interface TableInterface {
-  columns: Array<any>;
-  getPaginationRecord?: any;
+  columns: Array<{
+    key: string,
+    title: string,
+    dataIndex?: string | undefined,
+    width: number,
+    render?: (record: Pokemon) => ReactElement | undefined
+  }>;
+  getPaginationRecord?: (page, pageSize) => void;
   total: number;
   dataSource: Array<{
     name: string;
