@@ -1,45 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Input, message, Select } from 'antd';
-import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
-import { Table, SpinLoader } from 'components';
+import React, { useEffect, useState, ChangeEvent } from 'react';
+import { useSelector } from 'react-redux';
+import { message, Select } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Table, SpinLoader, SearchInput } from 'components';
+import { Pokemon } from 'model';
 import { getLoading, getMyPokemonSelector, getPokemonTypeSelector } from 'seletors/AppSelector';
-import { getPokemonTypeData, getPokemonTypes, deletePokemon } from 'actions/AppAction';
+import { useActions } from 'actions';
+import * as AppActions from 'actions/AppAction';
 import { Container, DeleteIcon, FilterWrap } from './styles';
 
 const { Option } = Select;
 message.config({ maxCount: 1 });
 
 const MyPokemon = () => {
-  const dispatch = useDispatch();
   const user = localStorage.getItem('user') || '';
 
   const myPokemon = useSelector(getMyPokemonSelector(user));
   const pokemonTypeList = useSelector(getPokemonTypeSelector);
   const loading = useSelector(getLoading);
+  const appAction = useActions(AppActions);
 
   const [list, setList] = useState(myPokemon);
   const [typeList, setTypeList] = useState([]);
-  const [typeListResult, setTypeListResult] = useState([]);
+  const [typeListResult, setTypeListResult] = useState<Pokemon[]>([]);
   const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
     if(!pokemonTypeList?.length) {
-      // @ts-ignore
-      dispatch(getPokemonTypes());
+      appAction.getPokemonTypes();
     }
-  }, [dispatch, pokemonTypeList]);
+  }, []);
 
   const onDeleteRecord = (record) => async () => {
-    // @ts-ignore
-    const res = await dispatch(deletePokemon(record));
+    const res = await appAction.deletePokemon(record);
     if(res) {
       const index = (list || []).findIndex(i => i.name === record.name && i.url === record.url);
       setList([
         ...list.slice(0, index),
         ...list.slice(index + 1)
       ]);
-      message.success("Pokemon removed from your bag successfully..!");
+      message.success('Pokemon removed from your bag successfully..!');
     }
   };
 
@@ -68,12 +68,12 @@ const MyPokemon = () => {
     },
   ]
 
-  const onSearch = (e) => {
+  const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     const list = typeList?.length !== 0 ? typeListResult : myPokemon;
     setSearchName(value);
     if (value) {
-      const result = (list || [])?.filter((d: any) => (d?.name).toLowerCase().includes(value.toLowerCase())) || [];
+      const result = (list || [])?.filter((d: Pokemon) => (d?.name).toLowerCase().includes(value.toLowerCase())) || [];
       setList(result);
     } else {
       setList(list);
@@ -83,23 +83,22 @@ const MyPokemon = () => {
   const searchByType = async (value) => {
     return Promise.allSettled(
       (value || []).map(e => {
-        // @ts-ignore
-        return dispatch(getPokemonTypeData(e));
+        return appAction.getPokemonTypeData(e);
       })
-    ).then((responseArr: any) => {
-      const status: any = [];
-      const response: any = [];
+    ).then((responseArr: PromiseSettledResult<any>[]) => {
+      const status: Array<string> = [];
+      const response: Array<any> = [];
       responseArr.forEach((res: any) => {
         status.push(res?.status);
         response.push(res?.value?.data);
       });
       if (!status.includes('rejected')) {
-        let typeArr: any = [];
+        let typeArr: Pokemon[] = [];
         (response || []).forEach((i: any) => {
           const pokemonArr = (i?.pokemon || []).map(p => p.pokemon);
           typeArr = [...typeArr, ...pokemonArr]
         });
-        const filterResult = (typeArr || []).filter(o => myPokemon.some(({name}) => o.name === name));
+        const filterResult: Pokemon[] | [] = (typeArr || []).filter(o => myPokemon.some(({name}) => o.name === name));
         setTypeListResult(filterResult);
         return filterResult;
       }
@@ -111,7 +110,7 @@ const MyPokemon = () => {
       setTypeList(value);
       setList(myPokemon);
     } else if(value?.length === 0 && searchName !== '') {
-      const result = (myPokemon || [])?.filter((d: any) => (d?.name).toLowerCase().includes(searchName.toLowerCase())) || [];
+      const result = (myPokemon || [])?.filter((d: Pokemon) => (d?.name).toLowerCase().includes(searchName.toLowerCase())) || [];
       setList(result);
       setTypeList(value);
     } else {
@@ -125,7 +124,7 @@ const MyPokemon = () => {
     <Container>
       { loading && <SpinLoader /> }
       <FilterWrap>
-        <Input prefix={<SearchOutlined />} onChange={onSearch} placeholder="Search by Name.." />
+        <SearchInput onSearch={onSearch} />
         <Select
           mode="multiple"
           placeholder="Please select type of pokemon"

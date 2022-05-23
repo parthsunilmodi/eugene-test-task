@@ -4,14 +4,15 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import { Provider } from 'react-redux';
-import { persistStore } from 'redux-persist';
-import { configureStore, history } from './reducers/store';
+import configureStore, { history } from './reducers/store';
 
-const store = configureStore();
-const persistor = persistStore(store);
+const { persistor, store } = configureStore();
 
-// @ts-ignore
-const AllTheProviders: FC = ({children}) => {
+interface AllProviderInterface {
+  children: JSX.Element
+}
+
+const AllTheProviders: FC<AllProviderInterface> = ({ children }) => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
