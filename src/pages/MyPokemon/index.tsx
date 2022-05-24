@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, {useEffect, useState, ChangeEvent, useMemo} from 'react';
 import { useSelector } from 'react-redux';
 import { message, Select } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -22,7 +22,6 @@ const MyPokemon = () => {
 
   const [list, setList] = useState(myPokemon);
   const [typeList, setTypeList] = useState([]);
-  const [typeListResult, setTypeListResult] = useState<Pokemon[]>([]);
   const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
@@ -68,18 +67,6 @@ const MyPokemon = () => {
     },
   ]
 
-  const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const list = typeList?.length !== 0 ? typeListResult : myPokemon;
-    setSearchName(value);
-    if (value) {
-      const result = (list || [])?.filter((d: Pokemon) => (d?.name).toLowerCase().includes(value.toLowerCase())) || [];
-      setList(result);
-    } else {
-      setList(list);
-    }
-  };
-
   const searchByType = async (value) => {
     return Promise.allSettled(
       (value || []).map(e => {
@@ -98,26 +85,27 @@ const MyPokemon = () => {
           const pokemonArr = (i?.pokemon || []).map(p => p.pokemon);
           typeArr = [...typeArr, ...pokemonArr]
         });
-        const filterResult: Pokemon[] | [] = (typeArr || []).filter(o => myPokemon.some(({name}) => o.name === name));
-        setTypeListResult(filterResult);
+        const filterResult: Pokemon[] | [] = (typeArr || []).filter(o => myPokemon.some(({name}) => (o.name === name)));
         return filterResult;
       }
     });
   };
 
+  useEffect(() => {
+    (async () => {
+      const filterTypeListResult = typeList?.length > 0 ? await searchByType(typeList) : myPokemon;
+      const searchNameFilter = searchName.length > 0 ? (filterTypeListResult || [])?.filter((d: Pokemon) => (d?.name).toLowerCase().includes(searchName.toLowerCase())) : filterTypeListResult;
+      setList(searchNameFilter);
+    })();
+  }, [searchName, typeList]);
+
+  const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setSearchName(value);
+  };
+
   const handleChange = async (value) => {
-    if(value?.length === 0 && searchName === '') {
-      setTypeList(value);
-      setList(myPokemon);
-    } else if(value?.length === 0 && searchName !== '') {
-      const result = (myPokemon || [])?.filter((d: Pokemon) => (d?.name).toLowerCase().includes(searchName.toLowerCase())) || [];
-      setList(result);
-      setTypeList(value);
-    } else {
-      setTypeList(value);
-      const result = await searchByType(value);
-      setList(result);
-    }
+    setTypeList(value);
   }
 
   return(
